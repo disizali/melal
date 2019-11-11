@@ -64,6 +64,24 @@
               image: "melal.jpeg",
               rooms: [
                 {
+                  name: "M2",
+                  image: "melal1.jpeg"
+                },
+                {
+                  name: "L2",
+                  image: "melal2.jpeg"
+                },
+                {
+                  name: "L3",
+                  image: "melal3.jpeg"
+                }
+              ]
+            },
+            {
+              name: "SEPEHR",
+              image: "sepehr.jpeg",
+              rooms: [
+                {
                   name: "Studio",
                   image: "studio.jpeg"
                 },
@@ -82,14 +100,20 @@
               ]
             },
             {
-              name: "SEPEHR",
-              image: "sepehr.jpeg",
-              rooms: []
-            },
-            {
               name: "JAMM",
               image: "jamm.jpeg",
-              rooms: []
+              rooms: [{
+                  name: "Suite",
+                  image: "jamm1.jpeg"
+                },
+                {
+                  name: "one bedroom",
+                  image: "jamm2.jpeg"
+                }
+                {
+                  name: "Two Bedroom",
+                  image: "jamm3.jpeg"
+                }]
             }
           ];
 
@@ -134,7 +158,7 @@
                   phase == 1 ? "active" : "deactive"
                 }`}
               >
-                Choose Your Ideal Hotel
+                Choose Your Ideal Hotel ( <a href="http://melal.com">Melal.com</a> is down to get full name of melal rooms)
               </div>
               <div
                 className={`row rooms justify-content-center ${
@@ -176,7 +200,7 @@
                   phase == 2 ? "" : "deactive"
                 }`}
               >
-                Choose Your Ideal Room From{" "}
+                Choose Your Ideal Room From
                 <span className="text-main">{selectedHotel}</span> Hotel
               </div>
               <div
@@ -184,7 +208,9 @@
                   phase == 3 ? "active" : "deactive"
                 }`}
               >
-                <h3 className="text-center">Please fill this form whit your information</h3>
+                <h3 className="text-center">
+                  Please fill this form whit your information
+                </h3>
                 <div className="d-flex justify-content-center">
                   <div className="d-flex justify-content-center align-items-center flex-column w-100 p-2">
                     <input
@@ -212,7 +238,9 @@
                   </div>
                 </div>
                 <div class="p-2">
-                  <button className="btn btn-warning text-white bg-main w-100 text-main">Reserve</button>
+                  <button className="btn btn-warning text-white bg-main w-100 text-main">
+                    Reserve
+                  </button>
                 </div>
               </div>
             </div>

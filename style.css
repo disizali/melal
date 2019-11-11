@@ -1,0 +1,88 @@
+.text-main {
+  color: #99713a;
+}
+
+.bg-main {
+  background: #99713a !important;
+}
+
+.reserve-container {
+  transition: all 0.5s;
+  min-height: 60vh;
+}
+.hotels {
+  position: relative;
+  transition: all 0.5s;
+}
+
+.hotels-1 {
+  width: 80%;
+  display: flex;
+  justify-content: center;
+}
+.hotels-2 {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+}
+.hotels-3 {
+  width: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.hotel {
+  transition: all 0.5s;
+}
+.hotel.deactive {
+  opacity: 0.3;
+}
+
+.hotel-guide.deactive {
+  opacity: 0;
+  margin-bottom: 20px;
+  transition: all 0.5s;
+}
+
+.rooms {
+  transition: all 0.5s;
+  min-height: 20px;
+  height: 100%;
+  width: 100%;
+}
+.room {
+  transition: all 0.5s;
+}
+.rooms.deactive {
+  width: 50%;
+  margin-bottom: -20px;
+}
+.rooms.active {
+  margin-bottom: 0;
+  opacity: 1;
+}
+
+.room.deactive {
+  opacity: 0.3;
+}
+
+.room-guide {
+  transition: all 1s;
+  opacity: 1;
+  margin-top: 20px;
+}
+
+.room-guide.deactive {
+  opacity: 0;
+  margin-top: 40px;
+}
+.form {
+  display: flex;
+  transition: all 0.5;
+}
+.form.active {
+  opacity: 1;
+}
+.form.deactive {
+  opacity: 0;
+}

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <nav class="d-flex justify-content-center py-3">
+      <img src="http://melalgroup.com/img/logo_sticky.png" width="100" />
+    </nav>
+    <div id="root"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+    <script src="/components/Hotels.js"></script>
+    <script type="text/babel">
+      class Greeting extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            phase: 1,
+            selectedHotel: false,
+            selectedRoom: false
+          };
+          this.getPhaseClass = this.getPhaseClass.bind(this);
+          this.changePhase = this.changePhase.bind(this);
+        }
+        getPhaseClass() {
+          switch (this.state.phase) {
+            case 1:
+              return "hotels-1";
+              break;
+            case 2:
+              return "hotels-2";
+              break;
+            case 3:
+              return "hotels-3";
+              break;
+          }
+        }
+        selectHotel(id) {
+          this.setState({ selectedHotel: id, phase: 2 });
+        }
+        selectRoom(id) {
+          this.setState({ selectedRoom: id, phase: 3 });
+        }
+        changePhase(phase) {
+          this.setState({ phase });
+        }
+        render() {
+          const { selectedHotel, selectedRoom, phase } = this.state;
+          const hotels = [
+            {
+              name: "MELAL",
+              image: "melal.jpeg",
+              rooms: [
+                {
+                  name: "Studio",
+                  image: "studio.jpeg"
+                },
+                {
+                  name: "Suite",
+                  image: "suite.jpeg"
+                },
+                {
+                  name: "Large Suite",
+                  image: "largesuite.jpeg"
+                },
+                {
+                  name: "Two Bedroom",
+                  image: "twobedroom.jpeg"
+                }
+              ]
+            },
+            {
+              name: "SEPEHR",
+              image: "sepehr.jpeg",
+              rooms: []
+            },
+            {
+              name: "JAMM",
+              image: "jamm.jpeg",
+              rooms: []
+            }
+          ];
+
+          return (
+            <div className="reserve-container d-flex flex-column justify-content-between align-items-center container">
+              <div>
+                <h2>
+                  <span className="text-dark mr-1">Make</span>
+                  <span className="text-main ml-1">Reservation</span>
+                </h2>
+                <hr />
+              </div>
+              <div className={`hotels ${this.getPhaseClass()}`}>
+                {hotels.map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className={`bg-white rounded shadow-sm m-2 hotel ${
+                        selectedHotel == 0
+                          ? ""
+                          : selectedHotel != item.name
+                          ? "deactive"
+                          : "active"
+                      }`}
+                      onClick={() => this.selectHotel(item.name)}
+                    >
+                      <img
+                        src={item.image}
+                        alt={`hotel ${item.name}`}
+                        width="100%"
+                        className="rounded"
+                      />
+                      <div className="p-3">
+                        <span>{item.name}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div
+                className={`text-muted hotel-guide ${
+                  phase == 1 ? "active" : "deactive"
+                }`}
+              >
+                Choose Your Ideal Hotel
+              </div>
+              <div
+                className={`row rooms justify-content-center ${
+                  phase == 2 ? "active" : "deactive"
+                }`}
+              >
+                {selectedHotel != false
+                  ? hotels
+                      .find(item => item.name == selectedHotel)
+                      .rooms.map((item, index) => {
+                        return (
+                          <div
+                            key={index}
+                            className={`room col-sm-2 bg-white shadow rounded m-2 p-0 ${
+                              selectedRoom == 0
+                                ? ""
+                                : selectedRoom != item.name
+                                ? "deactive"
+                                : "active"
+                            }`}
+                            onClick={() => this.selectRoom(item.name)}
+                          >
+                            <img
+                              src={item.image}
+                              alt={`hotel ${item.name}`}
+                              width="100%"
+                              className="rounded"
+                            />
+                            <div className="p-3">
+                              <span>{item.name}</span>
+                            </div>
+                          </div>
+                        );
+                      })
+                  : ""}
+              </div>
+              <div
+                className={`text-muted room-guide ${
+                  phase == 2 ? "" : "deactive"
+                }`}
+              >
+                Choose Your Ideal Room From{" "}
+                <span className="text-main">{selectedHotel}</span> Hotel
+              </div>
+              <div
+                className={`form d-flex flex-column justify-content-center w-100 ${
+                  phase == 3 ? "active" : "deactive"
+                }`}
+              >
+                <h3 className="text-center">Please fill this form whit your information</h3>
+                <div className="d-flex justify-content-center">
+                  <div className="d-flex justify-content-center align-items-center flex-column w-100 p-2">
+                    <input
+                      type="text"
+                      className="form-control w-100 my-2"
+                      placeholder="first name"
+                    />
+                    <input
+                      type="text"
+                      className="form-control w-100 my-2"
+                      placeholder="last name"
+                    />
+                  </div>
+                  <div className="d-flex justify-content-center align-items-center flex-column w-100">
+                    <input
+                      type="text"
+                      className="form-control w-100 my-2"
+                      placeholder="email"
+                    />
+                    <input
+                      type="text"
+                      className="form-control w-100 my-2"
+                      placeholder="phone"
+                    />
+                  </div>
+                </div>
+                <div class="p-2">
+                  <button className="btn btn-warning text-white bg-main w-100 text-main">Reserve</button>
+                </div>
+              </div>
+            </div>
+          );
+        }
+      }
+
+      ReactDOM.render(<Greeting />, document.getElementById("root"));
+    </script>
+  </body>
+</html>

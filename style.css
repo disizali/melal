@@ -54,7 +54,8 @@
   transition: all 0.5s;
 }
 .rooms.deactive {
-  width: 50%;
+  width: 80%;
+  font-size: 0.8rem;
   margin-bottom: -20px;
 }
 .rooms.active {
@@ -78,6 +79,7 @@
 }
 .form {
   display: flex;
+  flex-direction: column;
   transition: all 0.5;
 }
 .form.active {
@@ -85,4 +87,30 @@
 }
 .form.deactive {
   opacity: 0;
+}
+
+form h3 strong {
+  background-color: #99713a;
+  text-align: center;
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 18px;
+  line-height: 40px;
+  text-align: center;
+  position: relative;
+  left: 0;
+  top: 0;
+  margin-right: 10px;
+}
+form h3 p {
+  color: #999;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  line-height: 14px;
 }

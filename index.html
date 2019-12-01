@@ -7,14 +7,24 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css" />
     <link
-      rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />
   </head>
   <body>
-    <nav class="d-flex justify-content-center py-3">
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+      integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <nav className="d-flex justify-content-center py-3">
       <img src="http://melalgroup.com/img/logo_sticky.png" width="100" />
     </nav>
     <div id="root"></div>
@@ -26,13 +36,40 @@
       class Greeting extends React.Component {
         constructor(props) {
           super(props);
+          let tmpHotel = this.getParameterByName("hotel", window.location.href);
+          let tmpRoom = this.getParameterByName(
+            "roomtype",
+            window.location.href
+          );
+          let phase = 1;
+          let selectedHotel = false;
+          let selectedRoom = false;
+          if (this.hotels.some(hotel => hotel.name == tmpHotel)) {
+            selectedHotel = tmpHotel;
+            phase = 2;
+            if (
+              this.hotels
+                .find(item => item.name == tmpHotel)
+                .rooms.some(room => room.name == tmpRoom)
+            ) {
+              selectedRoom = tmpRoom;
+              phase = 3;
+            }
+          }
           this.state = {
-            phase: 1,
-            selectedHotel: false,
-            selectedRoom: false
+            phase,
+            selectedHotel,
+            selectedRoom,
+            pickup: false,
+            dropoff: false
           };
           this.getPhaseClass = this.getPhaseClass.bind(this);
           this.changePhase = this.changePhase.bind(this);
+          this.toggleCheckboxes = this.toggleCheckboxes.bind(this);
+          this.handleChanges = this.handleChanges.bind(this);
+        }
+        handleChanges(e) {
+          this.setState({ [e.target.name]: e.target.value });
         }
         getPhaseClass() {
           switch (this.state.phase) {
@@ -48,7 +85,11 @@
           }
         }
         selectHotel(id) {
-          this.setState({ selectedHotel: id, phase: 2 });
+          this.setState({
+            selectedHotel: id,
+            phase: 2,
+            selectedRoom: false
+          });
         }
         selectRoom(id) {
           this.setState({ selectedRoom: id, phase: 3 });
@@ -56,67 +97,94 @@
         changePhase(phase) {
           this.setState({ phase });
         }
+        getParameterByName(name, url) {
+          if (!url) url = window.location.href;
+          name = name.replace(/[\[\]]/g, "\\$&");
+          var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+          if (!results) return null;
+          if (!results[2]) return "";
+          return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+        hotels = [
+          {
+            id: "5bd4545881c0804b233b11df",
+            name: "MELAL",
+            image: "melal.jpeg",
+            rooms: [
+              {
+                id: "5bf3caf46fb4770c2289b95a",
+                name: "Magnificent Medium ( M2 )",
+                image: "melal1.jpeg"
+              },
+              {
+                id: "5bf3cb936fb4770c2289b95b",
+                name: "Luxury Large ( L2 )",
+                image: "melal2.jpeg"
+              },
+              {
+                id: "5bf3cbe66fb4770c2289b95c",
+                name: "Luxury Large ( L3 )",
+                image: "melal3.jpeg"
+              }
+            ]
+          },
+          {
+            id: "5bd4546181c0804b233b11e0",
+            name: "SEPEHR",
+            image: "sepehr.jpeg",
+            rooms: [
+              {
+                id: "5bf3cd836fb4770c2289b95d",
+                name: "Studio",
+                image: "studio.jpeg"
+              },
+              {
+                id: "5bf3cdca6fb4770c2289b95e",
+                name: "Suite",
+                image: "suite.jpeg"
+              },
+              {
+                id: "5bf3cdca6fb4770c2289b95f",
+                name: "Large Suite",
+                image: "largesuite.jpeg"
+              },
+              {
+                id: "5bf3ce4e6fb4770c2289b960",
+                name: "Two Bedroom",
+                image: "twobedroom.jpeg"
+              }
+            ]
+          },
+          {
+            id: "5bd4547181c0804b233b11e1",
+            name: "JAMM",
+            image: "jamm.jpeg",
+            rooms: [
+              {
+                id: "5bf3cea26fb4770c2289b961",
+                name: "Suite",
+                image: "jamm1.jpeg"
+              },
+              {
+                id: "5bf3cee86fb4770c2289b962",
+                name: "one bedroom",
+                image: "jamm2.jpeg"
+              },
+              {
+                id: "5bf3d6496fb4770c2289b963",
+                name: "Two Bedroom",
+                image: "jamm3.jpeg"
+              }
+            ]
+          }
+        ];
+        toggleCheckboxes(e) {
+          this.setState({ [e.target.name]: !this.state[e.target.name] });
+        }
         render() {
           const { selectedHotel, selectedRoom, phase } = this.state;
-          const hotels = [
-            {
-              name: "MELAL",
-              image: "melal.jpeg",
-              rooms: [
-                {
-                  name: "Magnificent Medium ( M2 )",
-                  image: "melal1.jpeg"
-                },
-                {
-                  name: "Luxury Large ( L2 )",
-                  image: "melal2.jpeg"
-                },
-                {
-                  name: "Luxury Large ( L3 )",
-                  image: "melal3.jpeg"
-                }
-              ]
-            },
-            {
-              name: "SEPEHR",
-              image: "sepehr.jpeg",
-              rooms: [
-                {
-                  name: "Studio",
-                  image: "studio.jpeg"
-                },
-                {
-                  name: "Suite",
-                  image: "suite.jpeg"
-                },
-                {
-                  name: "Large Suite",
-                  image: "largesuite.jpeg"
-                },
-                {
-                  name: "Two Bedroom",
-                  image: "twobedroom.jpeg"
-                }
-              ]
-            },
-            {
-              name: "JAMM",
-              image: "jamm.jpeg",
-              rooms: [{
-                  name: "Suite",
-                  image: "jamm1.jpeg"
-                },
-                {
-                  name: "one bedroom",
-                  image: "jamm2.jpeg"
-                },
-                {
-                  name: "Two Bedroom",
-                  image: "jamm3.jpeg"
-                }]
-            }
-          ];
-
+          const hotels = this.hotels;
           return (
             <div className="reserve-container d-flex flex-column justify-content-between align-items-center container">
               <div>
@@ -208,40 +276,352 @@
                   phase == 3 ? "active" : "deactive"
                 }`}
               >
-                <h3 className="text-center">
-                  Please fill this form whit your information
-                </h3>
-                <div className="d-flex justify-content-center">
-                  <div className="d-flex justify-content-center align-items-center flex-column w-100 p-2">
-                    <input
-                      type="text"
-                      className="form-control w-100 my-2"
-                      placeholder="first name"
-                    />
-                    <input
-                      type="text"
-                      className="form-control w-100 my-2"
-                      placeholder="last name"
-                    />
+                <form
+                  method="POST"
+                  action="http://melalgroup.com/reservation/submit"
+                  className="d-flex flex-column-reverse justify-content-center"
+                >
+                  <div className="col-lg-8 add_bottom_15 order-lg-last order-first">
+                    <div className="form_title">
+                      <h3>
+                        <strong>1</strong>Date
+                      </h3>
+                      <p>Mussum ipsum cacilds, vidis litro abertis.</p>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-6">
+                        <div className="form-group">
+                          <label>Check in Date</label>
+                          <input
+                            id="date_timepicker_start"
+                            name="checkin"
+                            className="date-pick form-control"
+                            type="datetime-local"
+                            onChange={this.handleChanges}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="form-group">
+                          <label>Check out Date</label>
+                          <input
+                            id="date_timepicker_end"
+                            name="checkout"
+                            className="date-pick form-control"
+                            type="datetime-local"
+                            onChange={this.handleChanges}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="form-group">
+                          <label>Adults</label>
+                          <select
+                            name="person"
+                            className="form-control"
+                            onChange={this.handleChanges}
+                          >
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="more">more</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="form-group">
+                          <label>Quantity</label>
+                          <select
+                            name="qty"
+                            className="form-control"
+                            onChange={this.handleChanges}
+                          >
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="more">more</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="form_title">
+                      <h3>
+                        <strong>1</strong>Your Details
+                      </h3>
+                      <p>Mussum ipsum cacilds, vidis litro abertis.</p>
+                    </div>
+                    <div className="step">
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <div className="form-group">
+                            <label>First Name</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="firstname"
+                              onChange={this.handleChanges}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-sm-6">
+                          <div className="form-group">
+                            <label>Last Name</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="lastname"
+                              onChange={this.handleChanges}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <div className="form-group">
+                            <label>Email</label>
+                            <input
+                              type="email"
+                              name="email"
+                              className="form-control"
+                              onChange={this.handleChanges}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-sm-6">
+                          <div className="form-group">
+                            <label>Tel</label>
+                            <input
+                              type="text"
+                              name="tel"
+                              className="form-control"
+                              onChange={this.handleChanges}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <div className="form-group">
+                            <label>
+                              <input
+                                type="checkbox"
+                                onChange={this.handleChanges}
+                                id="pickup"
+                                name="pickup"
+                                data-toggle="collapse"
+                                data-target="#collapsepickup"
+                                aria-expanded="false"
+                                aria-controls="collapsepickup"
+                                className="collapsed"
+                                checked={this.state.pickup}
+                                onChange={this.toggleCheckboxes}
+                              />
+                              Airport Pickup
+                            </label>
+                          </div>
+                          <div
+                            id="collapsepickup"
+                            aria-expanded="true"
+                            className={`in collapse ${this.state.pickup ==
+                              true && `show`}`}
+                          >
+                            <div className="form-group">
+                              <label>Arrival Date</label>
+                              <input
+                                name="arrivaldate"
+                                className="date-pick form-control"
+                                type="datetime-local"
+                                onChange={this.handleChanges}
+                              />
+                            </div>
+                            <div className="form-group">
+                              <label>Arrival Flight No</label>
+                              <input
+                                type="datetime-local"
+                                name="arrivalflightno"
+                                className="form-control"
+                                onChange={this.handleChanges}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-sm-6">
+                          <div className="form-group">
+                            <label>
+                              <input
+                                type="checkbox"
+                                value="1"
+                                id="dropoff"
+                                name="dropoff"
+                                data-toggle="collapse"
+                                data-target="#collapsedropoff"
+                                aria-expanded="false"
+                                aria-controls="collapsedropoff"
+                                className="collapsed"
+                                checked={this.state.dropoff}
+                                onChange={this.toggleCheckboxes}
+                              />
+                              Airport DropOff
+                            </label>
+                          </div>
+                          <div
+                            id="collapsedropoff"
+                            aria-expanded="true"
+                            className={`in collapse ${this.state.dropoff ==
+                              true && `show`}`}
+                          >
+                            <div className="form-group">
+                              <label>Departure Date</label>
+                              <input
+                                type="datetime-local"
+                                name="departuredate"
+                                className="date-pick form-control"
+                                onChange={this.handleChanges}
+                              />
+                            </div>
+                            <div className="form-group">
+                              <label>Departure Flight No</label>
+                              <input
+                                type="datetime-local"
+                                name="departureflightno"
+                                className="form-control"
+                                onChange={this.handleChanges}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="form_title">
+                      <h3>
+                        <strong>2</strong>Company Information
+                      </h3>
+                      <p>Mussum ipsum cacilds, vidis litro abertis.</p>
+                    </div>
+                    <div className="step">
+                      <div className="row">
+                        <div className="col-md-6 col-sm-12">
+                          <div className="form-group">
+                            <label>Contact Name</label>
+                            <input
+                              type="text"
+                              name="contactname"
+                              className="form-control"
+                              onChange={this.handleChanges}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6 col-sm-12">
+                          <div className="form-group">
+                            <label>Company Name</label>
+                            <input
+                              type="text"
+                              name="companyname"
+                              className="form-control"
+                              onChange={this.handleChanges}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-4">
+                          <div className="form-group">
+                            <label>Tel</label>
+                            <input
+                              type="text"
+                              name="cotel"
+                              className="form-control"
+                              onChange={this.handleChanges}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-4">
+                          <div className="form-group">
+                            <label>Fax</label>
+                            <input
+                              type="text"
+                              name="cofax"
+                              className="form-control"
+                              onChange={this.handleChanges}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-4">
+                          <div className="form-group">
+                            <label>Email</label>
+                            <input
+                              type="text"
+                              name="coemail"
+                              className="form-control"
+                              onChange={this.handleChanges}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="policy">
+                      <h4>Cancellation policy</h4>
+                      <div className="form-group">
+                        <label>
+                          <input
+                            type="checkbox"
+                            name="policy_terms"
+                            id="policy_terms"
+                            className="mr-2"
+                            onChange={this.handleChanges}
+                          />
+                          I accept terms and conditions and general policy.
+                        </label>
+                      </div>
+                    </div>
                   </div>
-                  <div className="d-flex justify-content-center align-items-center flex-column w-100">
-                    <input
-                      type="text"
-                      className="form-control w-100 my-2"
-                      placeholder="email"
-                    />
-                    <input
-                      type="text"
-                      className="form-control w-100 my-2"
-                      placeholder="phone"
-                    />
-                  </div>
-                </div>
-                <div class="p-2">
-                  <button className="btn btn-warning text-white bg-main w-100 text-main">
-                    Reserve
-                  </button>
-                </div>
+                  <button className="btn-warning btn my-3">RESERVE</button>
+                  <input
+                    type="hidden"
+                    name="hotelid"
+                    value={
+                      selectedHotel != false &&
+                      hotels.find(item => item.name == selectedHotel).id
+                    }
+                  />
+                  <input type="hidden" name="hotelname" value={selectedHotel} />
+                  <input
+                    type="hidden"
+                    name="roomtypeid"
+                    value={
+                      selectedHotel != false &&
+                      selectedRoom != false &&
+                      hotels
+                        .find(item => item.name == selectedHotel)
+                        .rooms.find(item => item.name == selectedRoom).id
+                    }
+                  />
+                  <input
+                    type="hidden"
+                    name="roomtypename"
+                    value={
+                      selectedHotel != false &&
+                      selectedRoom != false &&
+                      hotels
+                        .find(item => item.name == selectedHotel)
+                        .rooms.find(item => item.name == selectedRoom).name
+                    }
+                  />
+                </form>
               </div>
             </div>
           );
